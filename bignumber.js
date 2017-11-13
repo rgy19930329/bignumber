@@ -1,26 +1,26 @@
 Array.prototype.toInt = function() {
-  for (var i = 0; i < this.length; i++) {
-    this[i] = parseInt(this[i]);
+    for (var i = 0; i < this.length; i++) {
+      this[i] = parseInt(this[i]);
+    }
+    return this;
   }
-  return this;
-}
-// 从数组末尾起移除0，直到非0停止
+  // 从数组末尾起移除0，直到非0停止
 Array.prototype.removeZero = function() {
-  var flag = true,
-    len = this.length;
-  for (var i = len - 1; i >= 0; i--) {
-    if (this[i] != 0) {
-      flag = false;
+    var flag = true,
+      len = this.length;
+    for (var i = len - 1; i >= 0; i--) {
+      if (this[i] != 0) {
+        flag = false;
+      }
+      if (flag && this[i] == 0) {
+        this.splice(i, 1);
+      }
     }
-    if (flag && this[i] == 0) {
-      this.splice(i, 1);
-    }
+    return this;
   }
-  return this;
-}
-// 在数组末尾添加n个0
+  // 在数组末尾添加n个0
 Array.prototype.addZero = function(n) {
-  for(var i = 0; i < n; i++) {
+  for (var i = 0; i < n; i++) {
     this.push('0');
   }
   return this;
@@ -28,8 +28,8 @@ Array.prototype.addZero = function(n) {
 
 // 加
 function add(a, b) {
-  var ax = a.split('').reverse().toInt();
-  var bx = b.split('').reverse().toInt();
+  var ax = String(a).split('').reverse().toInt();
+  var bx = String(b).split('').reverse().toInt();
   var len = (ax.length > bx.length) ? ax.length : bx.length;
   var rx = [0],
     slen, x;
@@ -65,8 +65,8 @@ function add(a, b) {
 
 // 比较大小
 function compare(a, b) {
-  var ax = a.split('').reverse().toInt();
-  var bx = b.split('').reverse().toInt();
+  var ax = String(a).split('').reverse().toInt();
+  var bx = String(b).split('').reverse().toInt();
   var len = (ax.length > bx.length) ? ax.length : bx.length;
   var slen, x;
 
@@ -106,8 +106,8 @@ function compare(a, b) {
 
 // 减
 function sub(a, b) {
-  var ax = a.split('').reverse().toInt();
-  var bx = b.split('').reverse().toInt();
+  var ax = String(a).split('').reverse().toInt();
+  var bx = String(b).split('').reverse().toInt();
   var len = (ax.length > bx.length) ? ax.length : bx.length;
   var rx = [0],
     slen, x;
@@ -158,8 +158,8 @@ function sub(a, b) {
 
 // 乘
 function mut(a, b) {
-  var ax = a.split('').reverse().toInt();
-  var bx = b.split('').reverse().toInt();
+  var ax = String(a).split('').reverse().toInt();
+  var bx = String(b).split('').reverse().toInt();
   var len = (ax.length > bx.length) ? ax.length : bx.length;
   var slen, x, rt = [];
 
@@ -177,7 +177,7 @@ function mut(a, b) {
 
   for (var i = 0; i < len; i++) {
     var rx = [0];
-    for(var j = 0; j < len; j++) {
+    for (var j = 0; j < len; j++) {
       var t = ax[j] * bx[i];
       rx[j] += t % 10;
       rx[j + 1] = parseInt(t / 10);
@@ -187,7 +187,7 @@ function mut(a, b) {
   }
 
   var rs = '0';
-  for(var k = 0; k < rt.length; k++) {
+  for (var k = 0; k < rt.length; k++) {
     rs = add(rs, rt[k]);
   }
   return rs;
@@ -202,13 +202,41 @@ function mut(a, b) {
 function div(a, b) {
   var ax = a.split('').toInt();
   var bx = b.split('').toInt();
+  var rt = [];
+
+  var x = a.slice(0, b.length);
+  console.log(x);
+
+  if (compare(x, b) > 0) {
+    for (var i = 1; i <= 10; i++) {
+      if (compare(add(mut(b, i), b), x) > 0) {
+        rt.push(i);
+        break;
+      }
+    }
+  } else if (compare(x, b) < 0) {
+    x = a.slice(0, b.length + 1);
+    for (var i = 1; i <= 10; i++) {
+      if (compare(add(mut(b, i), b), x) > 0) {
+      	var s = sub(x, mut(b, i));
+    		console.log(s);
+    		x = s + a.slice(b.length + 1, b.length + 2);
+    		console.log(x);
+    		
+        rt.push(i);
+        break;
+      }
+    }
+  } else {
+    rt.push(1);
+  }
 
 
+
+  return rt;
 }
 
 var a = '387';
-var b = '3';
+var b = '4';
 
 console.log(div(a, b));
-
-
