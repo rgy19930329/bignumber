@@ -203,10 +203,11 @@ function div(a, b) {
   var ax = a.split('').toInt();
   var bx = b.split('').toInt();
 
-  
+
 }
 
 var a = '387';
 var b = '3';
 
 console.log(div(a, b));
+
