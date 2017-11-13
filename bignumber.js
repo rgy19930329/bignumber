@@ -4,7 +4,7 @@ Array.prototype.toInt = function() {
   }
   return this;
 }
-
+// 从数组末尾起移除0，直到非0停止
 Array.prototype.removeZero = function() {
   var flag = true,
     len = this.length;
@@ -15,6 +15,13 @@ Array.prototype.removeZero = function() {
     if (flag && this[i] == 0) {
       this.splice(i, 1);
     }
+  }
+  return this;
+}
+// 在数组末尾添加n个0
+Array.prototype.addZero = function(n) {
+  for(var i = 0; i < n; i++) {
+    this.push('0');
   }
   return this;
 }
@@ -42,9 +49,7 @@ function add(a, b) {
   for (var i = 0; i < len; i++) {
     var r = ax[i] + bx[i] + rx[i];
     var s = parseInt(r / 10);
-    if (r >= 10) {
-      r = r % 10;
-    }
+    r = r % 10;
     rx[i] = r;
     rx[i + 1] = s;
   }
@@ -156,8 +161,7 @@ function mut(a, b) {
   var ax = a.split('').reverse().toInt();
   var bx = b.split('').reverse().toInt();
   var len = (ax.length > bx.length) ? ax.length : bx.length;
-  var rx = [0],
-    slen, x;
+  var slen, x, rt = [];
 
   if (ax.length > bx.length) {
     slen = ax.length - bx.length;
@@ -172,26 +176,37 @@ function mut(a, b) {
   }
 
   for (var i = 0; i < len; i++) {
-    var r = ax[i] * bx[i] + rx[i];
-    var s = parseInt(r / 10);
-    if (r >= 10) {
-      r = r % 10;
+    var rx = [0];
+    for(var j = 0; j < len; j++) {
+      var t = ax[j] * bx[i];
+      rx[j] += t % 10;
+      rx[j + 1] = parseInt(t / 10);
     }
-    rx[i] = r;
-    rx[i + 1] = s;
+    rx = rx.removeZero().reverse().addZero(i).join('');
+    rt.push(rx);
   }
 
-  rx = rx.removeZero().reverse().join('');
-  return rx;
+  var rs = '0';
+  for(var k = 0; k < rt.length; k++) {
+    rs = add(rs, rt[k]);
+  }
+  return rs;
 }
 
-var a = '23';
-var b = '4';
+// var a = '123';
+// var b = '321';
 
-console.log(mut(a, b));
-
+// console.log(mut(a, b));
 
 // 除
 function div(a, b) {
+  var ax = a.split('').toInt();
+  var bx = b.split('').toInt();
 
+  
 }
+
+var a = '387';
+var b = '3';
+
+console.log(div(a, b));
