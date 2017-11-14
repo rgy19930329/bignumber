@@ -145,7 +145,7 @@ function sub(a, b) {
     }
     rx = '-' + rx.removeZero().reverse().join('');
   } else {
-    return 0;
+    return '0';
   }
 
   return rx;
@@ -204,39 +204,91 @@ function div(a, b) {
   var bx = b.split('').toInt();
   var rt = [];
 
-  var x = a.slice(0, b.length);
-  console.log(x);
+  var cur = b.length;
+  var x, k = {
+    s: 0
+  };
 
-  if (compare(x, b) > 0) {
-    for (var i = 1; i <= 10; i++) {
-      if (compare(add(mut(b, i), b), x) > 0) {
-        rt.push(i);
-        break;
-      }
+  for (var idx = 0; idx < a.length; idx++) {
+    if (k.s != 0) {
+      x = k.s + a.slice(idx, idx + 1);
+      console.log('1');
+    } else {
+      x = a.slice(idx, idx + 1);
+      console.log('2');
     }
-  } else if (compare(x, b) < 0) {
-    x = a.slice(0, b.length + 1);
-    for (var i = 1; i <= 10; i++) {
-      if (compare(add(mut(b, i), b), x) > 0) {
-      	var s = sub(x, mut(b, i));
-    		console.log(s);
-    		x = s + a.slice(b.length + 1, b.length + 2);
-    		console.log(x);
-    		
-        rt.push(i);
-        break;
+
+    if (compare(x, b) < 0) {
+      if (k.s != 0) {
+        console.log('3');
+        x = k.s + a.slice(idx, idx + 2);
+      } else {
+        console.log('4');
+        x = a.slice(idx, idx + 2);
       }
+      idx++;
     }
-  } else {
-    rt.push(1);
+
+    console.log('x: ' + x);
+    k = sdiv(x, b);
+    console.log(k);
+    rt.push(k.t);
   }
 
+  console.log(rt);
+
+  // var k = sdiv(a, b);
+  // console.log(k);
+
+  // function sdiv(c, d) {
+  //   var cur = d.length;
+  //   var x = c.slice(0, cur);
+  //   if (compare(x, d) > 0) {
+  //     console.log('够除');
+  //     for (var i = 1; i <= 10; i++) {
+  //       if (compare(add(mut(d, i), d), x) > 0) {
+  //         rt.push(i);
+  //         break;
+  //       }
+  //     }
+  //   } else if (compare(x, b) < 0) {
+  //     console.log('不够除, 借一位');
+  //     cur++;
+  //     x = a.slice(0, cur);
+  //     for (var i = 1; i <= 10; i++) {
+  //       if (compare(add(mut(d, i), d), x) > 0) {
+  //         var s = sub(x, mut(d, i));
+  //         // x = s + c.slice(cur, cur + 1);
+  //         console.log(c, x, s);
+  //         rt.push(i);
+  //         break;
+  //       }
+  //     }
+  //   } else {
+  //     rt.push(1);
+  //   }
+  // }
+
+  function sdiv(c, d) {
+    var s, t; // 余数，商
+    for (var i = 1; i <= 10; i++) {
+      if (compare(add(mut(d, i), d), c) > 0) {
+        s = sub(c, mut(d, i));
+        t = String(i);
+        break;
+      }
+    }
+    return {
+      s: s,
+      t: t
+    }
+  }
 
 
   return rt;
 }
 
-var a = '387';
-var b = '4';
+var a = '587';
+var b = '42';
 
 console.log(div(a, b));
